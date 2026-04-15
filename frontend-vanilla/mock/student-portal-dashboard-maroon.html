@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Hostel Management Dashboard - Maroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F0EB;
+      --s1: #FDFAF6;
+      --s2: #FFFFFF;
+      --s3: #F0EBE3;
+      --bd: rgba(0, 0, 0, 0.07);
+      --bd2: rgba(0, 0, 0, 0.13);
+
+      --t1: #1A1625;
+      --t2: #665663;
+      --t3: #A08F99;
+
+      --acc: #7A1F3D;
+      --acc-light: #F8E8EE;
+      --acc-bd: rgba(122, 31, 61, 0.24);
+
+      --coral: #FF5C4D;
+      --coral-light: #FFF0EF;
+      --amber: #F59E0B;
+      --amber-light: #FFFBEB;
+      --green: #10B981;
+      --green-light: #ECFDF5;
+      --blue: #3B82F6;
+      --blue-light: #EFF6FF;
+
+      --sidebar-width: 224px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--t1);
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a,
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--s1);
+      border-right: 1px solid var(--bd);
+      overflow-y: auto;
+    }
+
+    .sidebar-top {
+      padding: 20px 18px;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .sidebar-kicker {
+      margin: 0 0 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--acc);
+    }
+
+    .sidebar-title {
+      margin: 0 0 5px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--t1);
+    }
+
+    .sidebar-copy {
+      margin: 0 0 14px;
+      font-size: 11px;
+      color: var(--t3);
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border: 1px solid var(--acc-bd);
+      border-radius: 99px;
+      background: var(--acc-light);
+      color: var(--acc);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .sidebar-nav {
+      padding: 16px 10px 8px;
+    }
+
+    .nav-section + .nav-section {
+      margin-top: 16px;
+    }
+
+    .section-label {
+      margin: 16px 0 4px;
+      padding: 0 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--t3);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--t2);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--s3);
+      color: var(--t1);
+    }
+
+    .nav-item.active {
+      background: var(--acc);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 16px 18px;
+      border-top: 1px solid var(--bd);
+    }
+
+    .sidebar-bottom-label {
+      margin: 0 0 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--acc);
+    }
+
+    .sidebar-bottom-copy {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--t3);
+    }
+
+    .main-shell {
+      min-height: 100vh;
+      margin-left: var(--sidebar-width);
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      padding: 0 28px;
+      border-bottom: 1px solid var(--bd);
+      background: var(--s1);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .topbar-kicker,
+    .topbar-separator {
+      font-size: 11px;
+      color: var(--t3);
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--t1);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-left: auto;
+      min-width: 0;
+    }
+
+    .topbar-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--t3);
+      white-space: nowrap;
+    }
+
+    .topbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--bd2);
+      flex: 0 0 auto;
+    }
+
+    .user-block {
+      display: grid;
+      gap: 1px;
+      text-align: right;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--t1);
+      white-space: nowrap;
+    }
+
+    .user-role {
+      font-size: 10px;
+      color: var(--t3);
+      white-space: nowrap;
+    }
+
+    .signout-btn {
+      padding: 7px 16px;
+      border: 1px solid var(--acc-bd);
+      border-radius: 8px;
+      background: var(--acc-light);
+      color: var(--acc);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .signout-btn:hover {
+      background: var(--acc);
+      color: #FFFFFF;
+    }
+
+    .main-content {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    .welcome-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 26px 28px;
+      border-radius: 14px;
+      background: var(--acc);
+      color: #FFFFFF;
+    }
+
+    .welcome-copy {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .welcome-title {
+      margin: 0 0 5px;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #FFFFFF;
+    }
+
+    .welcome-description {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .welcome-stats {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 0 0 auto;
+    }
+
+    .banner-stat {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .banner-stat:first-child {
+      padding: 0 28px 0 0;
+    }
+
+    .banner-stat:last-child {
+      padding: 0 0 0 28px;
+    }
+
+    .banner-divider {
+      width: 1px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.2);
+      flex: 0 0 auto;
+    }
+
+    .banner-label {
+      margin: 0 0 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .banner-value {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: #FFFFFF;
+    }
+
+    .banner-value.balance {
+      color: #FFD6D2;
+    }
+
+    .banner-sub {
+      margin: 5px 0 0;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.58);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .stat-card,
+    .table-card {
+      min-width: 0;
+      background: var(--s2);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+    }
+
+    .stat-card {
+      padding: 20px 22px;
+      cursor: default;
+    }
+
+    .stat-card:hover {
+      background: var(--s3);
+      border-color: var(--bd2);
+    }
+
+    .accent-bar {
+      height: 3px;
+      margin-bottom: 14px;
+      border-radius: 99px;
+    }
+
+    .accent-maroon {
+      background: var(--acc);
+    }
+
+    .accent-blue {
+      background: var(--blue);
+    }
+
+    .accent-coral {
+      background: var(--coral);
+    }
+
+    .accent-amber {
+      background: var(--amber);
+    }
+
+    .stat-label {
+      margin: 0 0 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--t3);
+    }
+
+    .stat-value {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--t1);
+    }
+
+    .stat-value.action {
+      font-size: 22px;
+      color: var(--amber);
+    }
+
+    .stat-copy {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--t3);
+    }
+
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .table-card {
+      padding: 20px 22px;
+    }
+
+    .table-title {
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--t1);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      text-align: left;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    thead th {
+      padding: 0 10px 10px 0;
+      border-bottom: 1px solid var(--bd);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--t3);
+    }
+
+    thead th:last-child,
+    tbody td:last-child {
+      padding-right: 0;
+    }
+
+    tbody td {
+      padding: 11px 10px 11px 0;
+      border-bottom: 1px solid var(--bd);
+      font-size: 12px;
+      color: var(--t2);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 11px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .badge-active {
+      background: var(--green-light);
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    .badge-pending {
+      background: var(--amber-light);
+      color: #92400E;
+      border: 1px solid #FCD34D;
+    }
+
+    .badge-unpaid {
+      background: var(--coral-light);
+      color: #9F1239;
+      border: 1px solid #FCA5A5;
+    }
+
+    @media (max-width: 1220px) {
+      .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .welcome-stats {
+        width: 100%;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tables-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--bd);
+      }
+
+      .main-shell {
+        margin-left: 0;
+      }
+
+      .topbar {
+        height: auto;
+        padding: 14px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome-stats {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .banner-stat,
+      .banner-stat:first-child,
+      .banner-stat:last-child {
+        padding: 0;
+        text-align: left;
+      }
+
+      .banner-divider {
+        display: none;
+      }
+
+      .topbar-right {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .topbar-left {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <p class="sidebar-kicker">Campus Residence Ops</p>
+        <h1 class="sidebar-title">Hostel Management</h1>
+        <p class="sidebar-copy">A clearer operating space for rooms, guest approvals, support, and fee workflows.</p>
+        <span class="role-badge">Resident Student</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Student navigation">
+        <div class="nav-section">
+          <div class="section-label">Resident Workspace</div>
+          <a class="nav-item active" href="#">Dashboard</a>
+          <a class="nav-item" href="#">My Allocations</a>
+          <a class="nav-item" href="#">Pay Fees</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="section-label">Requests &amp; Support</div>
+          <a class="nav-item" href="#">Guest Visit Request</a>
+          <a class="nav-item" href="#">Visitor Log</a>
+          <a class="nav-item" href="#">Raise Complaint</a>
+          <a class="nav-item" href="#">Transfer Request</a>
+        </div>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <p class="sidebar-bottom-label">Live Operations</p>
+        <p class="sidebar-bottom-copy">Requests, rooms, visitor flow, and finance actions stay connected across the portal.</p>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-kicker">Student Portal</span>
+          <span class="topbar-separator">&nbsp;/&nbsp;</span>
+          <span class="topbar-title">Student Dashboard</span>
+        </div>
+
+        <div class="topbar-right">
+          <span class="topbar-date">15 Apr 2026</span>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <div class="user-block">
+            <span class="user-name">John Student</span>
+            <span class="user-role">Resident Student</span>
+          </div>
+          <button class="signout-btn" type="button">Sign Out</button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="welcome-banner">
+          <div class="welcome-copy">
+            <h2 class="welcome-title">Welcome back, John</h2>
+            <p class="welcome-description">Review room details, pending dues, visitor approvals, and support requests from one bold, focused workspace.</p>
+            <div class="tag-row">
+              <span class="tag">Room 1</span>
+              <span class="tag">1 guest request pending</span>
+              <span class="tag">1 fee item unpaid</span>
+            </div>
+          </div>
+
+          <div class="welcome-stats">
+            <div class="banner-stat">
+              <p class="banner-label">Outstanding Balance</p>
+              <p class="banner-value balance">Rs. 50,000</p>
+              <p class="banner-sub">Clear pending dues.</p>
+            </div>
+            <div class="banner-divider" aria-hidden="true"></div>
+            <div class="banner-stat">
+              <p class="banner-label">Guest Approvals</p>
+              <p class="banner-value">0</p>
+              <p class="banner-sub">No approved stays.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Student overview cards">
+          <article class="stat-card">
+            <div class="accent-bar accent-maroon"></div>
+            <p class="stat-label">Active Room</p>
+            <p class="stat-value">1</p>
+            <p class="stat-copy">Current allocation in room 1.</p>
+          </article>
+
+          <article class="stat-card">
+            <div class="accent-bar accent-blue"></div>
+            <p class="stat-label">Guest Requests</p>
+            <p class="stat-value">1</p>
+            <p class="stat-copy">1 awaiting approval, 0 cleared.</p>
+          </article>
+
+          <article class="stat-card">
+            <div class="accent-bar accent-coral"></div>
+            <p class="stat-label">Fee Items</p>
+            <p class="stat-value">1</p>
+            <p class="stat-copy">1 still needs payment.</p>
+          </article>
+
+          <article class="stat-card">
+            <div class="accent-bar accent-amber"></div>
+            <p class="stat-label">Support Status</p>
+            <p class="stat-value action">Action</p>
+            <p class="stat-copy">Finance follow-up required.</p>
+          </article>
+        </section>
+
+        <section class="tables-grid" aria-label="Student records">
+          <article class="table-card">
+            <h3 class="table-title">Allocation Snapshot</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Room ID</th>
+                    <th>Check-In Date</th>
+                    <th>Check-Out Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>2026-03-15</td>
+                    <td>&mdash;</td>
+                    <td><span class="badge badge-active">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <h3 class="table-title">Guest Request Timeline</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Guest Name</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Parent 1</td>
+                    <td>14 Apr 2026 23:29</td>
+                    <td>15 Apr 2026 23:29</td>
+                    <td><span class="badge badge-pending">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <h3 class="table-title">Fee Status</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fee Type</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>hostel_fee</td>
+                    <td>Rs. 50,000</td>
+                    <td>2026-05-14</td>
+                    <td><span class="badge badge-unpaid">Unpaid</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

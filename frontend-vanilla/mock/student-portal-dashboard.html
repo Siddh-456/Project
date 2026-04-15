@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Hostel Portal Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F0F13;
+      --surface: #17171D;
+      --surface-2: #1F1F28;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-hover: rgba(255, 255, 255, 0.13);
+      --text-primary: #F0F0F5;
+      --text-secondary: #9090A8;
+      --text-muted: #5A5A72;
+      --accent: #6C63FF;
+      --accent-glow: rgba(108, 99, 255, 0.15);
+      --green: #22C55E;
+      --green-dim: rgba(34, 197, 94, 0.12);
+      --amber: #F59E0B;
+      --amber-dim: rgba(245, 158, 11, 0.12);
+      --red: #EF4444;
+      --red-dim: rgba(239, 68, 68, 0.12);
+      --blue: #3B82F6;
+      --blue-dim: rgba(59, 130, 246, 0.12);
+      --sidebar-width: 220px;
+      --radius-card: 10px;
+      --radius-control: 6px;
+      --radius-pill: 99px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    a {
+      font: inherit;
+      color: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      padding: 24px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      display: grid;
+      gap: 4px;
+    }
+
+    .sidebar-kicker,
+    .section-label,
+    .metric-label,
+    .card-label,
+    .table-header-text {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .sidebar-copy {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .role-badge {
+      align-self: flex-start;
+      margin-top: 20px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .nav-section {
+      margin-top: 28px;
+    }
+
+    .section-label {
+      margin-bottom: 6px;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 0;
+      border-left: 2px solid transparent;
+      border-radius: var(--radius-control);
+      background: transparent;
+      color: var(--text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--surface-2);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--accent-glow);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 28px;
+    }
+
+    .sidebar-footer p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .main-shell {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    .topbar {
+      height: 60px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .topbar-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .topbar-kicker {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .topbar-slash {
+      color: var(--text-muted);
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .topbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      flex: 0 0 auto;
+    }
+
+    .user-block {
+      display: grid;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .signout-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 6px 14px;
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-control);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .signout-btn:hover {
+      background: var(--surface-2);
+    }
+
+    .content {
+      padding: 28px;
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .welcome-card,
+    .stat-card,
+    .data-card {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+    }
+
+    .welcome-card {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .welcome-copy {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .welcome-copy h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .welcome-copy p {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 12px;
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-pill);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .welcome-metrics {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex: 0 0 auto;
+    }
+
+    .metric {
+      min-width: 150px;
+    }
+
+    .metric-value {
+      margin-top: 4px;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .metric-value.balance {
+      color: var(--red);
+    }
+
+    .metric-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .metric-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+      flex: 0 0 auto;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .stat-card {
+      padding: 20px 22px;
+    }
+
+    .card-label {
+      margin-bottom: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .card-value.action {
+      font-size: 24px;
+      color: var(--amber);
+    }
+
+    .card-description {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .data-card {
+      padding: 20px 22px;
+    }
+
+    .data-card h2 {
+      margin: 0 0 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      word-break: break-word;
+    }
+
+    thead th {
+      padding: 0 12px 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    thead th:last-child,
+    tbody td:last-child {
+      padding-right: 0;
+    }
+
+    tbody td {
+      padding: 10px 12px 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .status-pill.green {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+
+    .status-pill.amber {
+      background: var(--amber-dim);
+      color: var(--amber);
+    }
+
+    .status-pill.red {
+      background: var(--red-dim);
+      color: var(--red);
+    }
+
+    @media (max-width: 1220px) {
+      .welcome-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .welcome-metrics {
+        width: 100%;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main-shell {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 12px 20px;
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        flex-wrap: wrap;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome-metrics {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .metric-divider {
+        display: none;
+      }
+
+      .topbar-left {
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-kicker">Campus Residence Ops</div>
+        <div class="sidebar-title">Hostel Management</div>
+        <div class="sidebar-copy">A clearer operating space for rooms, guest approvals, support, and fee workflows.</div>
+      </div>
+
+      <div class="role-badge">Resident Student</div>
+
+      <section class="nav-section">
+        <div class="section-label">Resident Workspace</div>
+        <nav class="nav-list" aria-label="Resident workspace">
+          <a class="nav-item active" href="#">Dashboard</a>
+          <a class="nav-item" href="#">My Allocations</a>
+          <a class="nav-item" href="#">Pay Fees</a>
+        </nav>
+      </section>
+
+      <section class="nav-section">
+        <div class="section-label">Requests &amp; Support</div>
+        <nav class="nav-list" aria-label="Requests and support">
+          <a class="nav-item" href="#">Guest Visit Request</a>
+          <a class="nav-item" href="#">Visitor Log</a>
+          <a class="nav-item" href="#">Raise Complaint</a>
+          <a class="nav-item" href="#">Transfer Request</a>
+        </nav>
+      </section>
+
+      <div class="sidebar-footer">
+        <div class="section-label">Live Operations</div>
+        <p>Requests, rooms, visitor flow, and finance actions stay connected across the portal.</p>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-kicker">Student Portal</div>
+          <div class="topbar-slash">/</div>
+          <div class="topbar-title">Student Dashboard</div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="topbar-date">15 Apr 2026</div>
+          <div class="topbar-divider" aria-hidden="true"></div>
+          <div class="user-block">
+            <div class="user-name">John Student</div>
+            <div class="user-role">Resident Student</div>
+          </div>
+          <button class="signout-btn" type="button">Sign Out</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="welcome-card">
+          <div class="welcome-copy">
+            <h1>Welcome back, John</h1>
+            <p>Review room details, pending dues, visitor approvals, and support requests from one structured workspace.</p>
+            <div class="tag-row">
+              <span class="tag">Room 1</span>
+              <span class="tag">1 guest request pending</span>
+              <span class="tag">1 fee item unpaid</span>
+            </div>
+          </div>
+
+          <div class="welcome-metrics">
+            <div class="metric">
+              <div class="metric-label">Outstanding Balance</div>
+              <div class="metric-value balance">Rs. 50,000</div>
+              <div class="metric-sub">Clear pending dues.</div>
+            </div>
+
+            <div class="metric-divider" aria-hidden="true"></div>
+
+            <div class="metric">
+              <div class="metric-label">Guest Approvals</div>
+              <div class="metric-value">0</div>
+              <div class="metric-sub">No approved guest stays.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Summary metrics">
+          <article class="stat-card">
+            <div class="card-label">Active Room</div>
+            <div class="card-value">1</div>
+            <div class="card-description">Current allocation in room 1.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="card-label">Guest Requests</div>
+            <div class="card-value">1</div>
+            <div class="card-description">1 awaiting approval, 0 cleared.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="card-label">Fee Items</div>
+            <div class="card-value">1</div>
+            <div class="card-description">1 still needs payment.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="card-label">Support Status</div>
+            <div class="card-value action">Action</div>
+            <div class="card-description">Finance follow-up required.</div>
+          </article>
+        </section>
+
+        <section class="bottom-grid" aria-label="Student records">
+          <article class="data-card">
+            <h2>Allocation Snapshot</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Room ID</th>
+                    <th>Check-In Date</th>
+                    <th>Check-Out Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>2026-03-15</td>
+                    <td>&mdash;</td>
+                    <td><span class="status-pill green">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="data-card">
+            <h2>Guest Request Timeline</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Guest Name</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Parent 1</td>
+                    <td>14 Apr 2026 23:29</td>
+                    <td>15 Apr 2026 23:29</td>
+                    <td><span class="status-pill amber">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="data-card">
+            <h2>Fee Status</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fee Type</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>hostel_fee</td>
+                    <td>Rs. 50,000</td>
+                    <td>2026-05-14</td>
+                    <td><span class="status-pill red">Unpaid</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelHub Student Dashboard - Clean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --page-a: #eff7ff;
+      --page-b: #f4fbff;
+      --page-c: #fff7ef;
+      --frame: rgba(255, 255, 255, 0.72);
+      --frame-strong: rgba(255, 255, 255, 0.9);
+      --line: rgba(136, 160, 198, 0.14);
+      --line-strong: rgba(136, 160, 198, 0.22);
+      --text: #263448;
+      --text-soft: #64748a;
+      --text-muted: #9aa8bc;
+      --blue: #83b3fb;
+      --blue-strong: #628ef1;
+      --mint: #75dfca;
+      --mint-strong: #47c9ad;
+      --amber: #f4c46d;
+      --amber-strong: #e6ab42;
+      --coral: #ff8f7b;
+      --coral-strong: #ff6f5f;
+      --green: #46c77d;
+      --green-strong: #31ab66;
+      --shadow: 0 18px 52px rgba(105, 129, 163, 0.14);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top center, rgba(131, 179, 251, 0.22), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(117, 223, 202, 0.16), transparent 36%),
+        linear-gradient(180deg, var(--page-a) 0%, var(--page-b) 54%, var(--page-c) 100%);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(149, 172, 209, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(149, 172, 209, 0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at center, black 18%, transparent 74%);
+      pointer-events: none;
+    }
+
+    a,
+    button {
+      font: inherit;
+    }
+
+    .page-frame {
+      position: relative;
+      z-index: 1;
+      width: min(1480px, calc(100vw - 32px));
+      height: calc(100vh - 32px);
+      margin: 16px auto;
+      display: grid;
+      grid-template-columns: 188px minmax(0, 1fr);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.7));
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 16px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(243, 251, 255, 0.46));
+      border-right: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 4px 18px;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
+    }
+
+    .brand-mark span {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 6px;
+    }
+
+    .brand-mark span:nth-child(1) {
+      top: 0;
+      left: 0;
+      background: linear-gradient(135deg, #91ead4, #5fcfb2);
+    }
+
+    .brand-mark span:nth-child(2) {
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #ffd39b, #f0b24e);
+    }
+
+    .brand-mark span:nth-child(3) {
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(135deg, #a7c4ff, #7195f5);
+    }
+
+    .brand-mark span:nth-child(4) {
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(135deg, #ffb3b1, #ff7b72);
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 40px;
+      padding: 8px 10px;
+      border-radius: 15px;
+      color: #384a61;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 10px 18px rgba(155, 181, 214, 0.16);
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      box-shadow: 0 8px 16px rgba(147, 171, 205, 0.18);
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: #ffffff;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-teal {
+      background: linear-gradient(135deg, #92ead5, #5ecfb2);
+    }
+
+    .icon-blue {
+      background: linear-gradient(135deg, #9ac0ff, #648ff2);
+    }
+
+    .icon-amber {
+      background: linear-gradient(135deg, #ffdba4, #efb651);
+    }
+
+    .icon-coral {
+      background: linear-gradient(135deg, #ffb59f, #ff8177);
+    }
+
+    .sidebar-summary {
+      margin-top: auto;
+      padding: 16px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.54);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      box-shadow: 0 10px 20px rgba(163, 186, 217, 0.12);
+    }
+
+    .sidebar-summary p {
+      margin: 0;
+    }
+
+    .summary-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .summary-value {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .summary-copy {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .content-shell {
+      min-width: 0;
+      height: 100%;
+      padding: 16px 22px 20px 24px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap: 16px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 40px;
+    }
+
+    .topbar-left {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-soft);
+    }
+
+    .topbar-left strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .date-chip,
+    .room-chip {
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .signout-btn {
+      height: 38px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8fafff, #6d90f3);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(117, 145, 230, 0.2);
+      cursor: pointer;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .hero-card,
+    .spotlight-card,
+    .card,
+    .panel {
+      min-width: 0;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      box-shadow: 0 16px 28px rgba(159, 185, 219, 0.13);
+    }
+
+    .hero-card {
+      padding: 20px 22px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(244, 251, 255, 0.74));
+    }
+
+    .hero-card h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .hero-card h1 span {
+      color: #6b7b91;
+      font-weight: 700;
+    }
+
+    .hero-card p {
+      margin: 8px 0 0;
+      max-width: 56ch;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(154, 177, 213, 0.18);
+      font-size: 12px;
+      font-weight: 700;
+      color: #4a5e76;
+    }
+
+    .spotlight-card {
+      padding: 18px 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(253, 248, 241, 0.7));
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .spotlight-card h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .spotlight-copy {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: -8px;
+    }
+
+    .spotlight-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .stat-box .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stat-box .value {
+      margin-top: 6px;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .stat-box .note {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .stat-box.balance .value {
+      color: var(--coral-strong);
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .card {
+      padding: 16px;
+      color: #203244;
+      overflow: hidden;
+    }
+
+    .card-room {
+      background: linear-gradient(145deg, #9fc4ff 0%, #7caef7 42%, #5e90ed 100%);
+    }
+
+    .card-fees {
+      background: linear-gradient(145deg, #ffd991 0%, #f3c66f 46%, #ddaa49 100%);
+    }
+
+    .card-requests {
+      background: linear-gradient(145deg, #96efd8 0%, #74dfc6 44%, #47c8ac 100%);
+    }
+
+    .card-status {
+      background: linear-gradient(145deg, #ffffff 0%, #f5fbff 100%);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32);
+    }
+
+    .card-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #ffffff;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card h2 {
+      margin: 14px 0 4px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(31, 49, 67, 0.82);
+    }
+
+    .card .subtle {
+      color: rgba(31, 49, 67, 0.74);
+    }
+
+    .card-button {
+      width: 100%;
+      height: 38px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32), 0 8px 16px rgba(144, 165, 192, 0.16);
+      color: #2f435a;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .card-status .card-icon {
+      background: rgba(131, 179, 251, 0.18);
+    }
+
+    .card-status .card-icon svg {
+      stroke: var(--blue-strong);
+    }
+
+    .card-status p,
+    .card-status .subtle {
+      color: var(--text-soft);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill-green {
+      background: rgba(70, 199, 125, 0.14);
+      color: var(--green-strong);
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .panel {
+      padding: 18px 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(247, 252, 255, 0.74));
+      min-height: 0;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .panel-copy {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .action-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .action-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      box-shadow: 0 10px 18px rgba(164, 188, 219, 0.12);
+    }
+
+    .action-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 8px 14px rgba(155, 179, 213, 0.16);
+    }
+
+    .action-icon.coral {
+      background: linear-gradient(135deg, #ffb59f, #ff8177);
+    }
+
+    .action-icon.blue {
+      background: linear-gradient(135deg, #9dc2ff, #6f95f2);
+    }
+
+    .action-meta strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .action-meta span {
+      display: block;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .action-status {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--coral-strong);
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .snapshot-card {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      box-shadow: 0 10px 18px rgba(164, 188, 219, 0.12);
+    }
+
+    .snapshot-card .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .snapshot-card .value {
+      margin-top: 8px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .snapshot-card .note {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 1280px) {
+      .cards-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .page-frame {
+        width: min(100vw - 20px, 100%);
+        height: auto;
+        min-height: calc(100vh - 20px);
+        margin: 10px auto;
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .content-shell {
+        height: auto;
+        grid-template-rows: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-row,
+      .snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-frame">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-name">HostelHub</div>
+      </div>
+
+      <nav class="nav-list" aria-label="Main navigation">
+        <a href="#" class="nav-item active">
+          <span class="nav-icon icon-teal" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"></rect><rect x="14" y="4" width="6" height="6"></rect><rect x="4" y="14" width="6" height="6"></rect><rect x="14" y="14" width="6" height="6"></rect></svg>
+          </span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 11.5L12 5l8 6.5"></path><path d="M6 10.5V19h12v-8.5"></path><path d="M9 19v-5h6v5"></path></svg>
+          </span>
+          <span>My Room</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-amber" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="2"></rect><path d="M3.5 10.5h17"></path></svg>
+          </span>
+          <span>Payments</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-coral" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.5 6.5l3 3"></path><path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19Z"></path></svg>
+          </span>
+          <span>Requests</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-summary">
+        <p class="summary-label">Next Due</p>
+        <p class="summary-value">15 Oct</p>
+        <p class="summary-copy">One pending hostel fee remains for this semester.</p>
+      </div>
+    </aside>
+
+    <main class="content-shell">
+      <header class="topbar">
+        <div class="topbar-left">Student Portal / <strong>Dashboard</strong></div>
+        <div class="topbar-right">
+          <span class="date-chip">15 Apr 2026</span>
+          <span class="room-chip">Room 302</span>
+          <button class="signout-btn" type="button">Sign Out</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <article class="hero-card">
+          <h1><span>Good morning,</span> John</h1>
+          <p>Your stay details, dues, and active requests are all visible here without extra clutter.</p>
+          <div class="hero-tags">
+            <span class="hero-tag">Occupied</span>
+            <span class="hero-tag">1 active request</span>
+            <span class="hero-tag">1 pending fee</span>
+          </div>
+        </article>
+
+        <article class="spotlight-card">
+          <h2>Today at a glance</h2>
+          <div class="spotlight-copy">Only the things that need attention right now.</div>
+          <div class="spotlight-stats">
+            <div class="stat-box balance">
+              <div class="label">Outstanding</div>
+              <div class="value">$450</div>
+              <div class="note">Due this month</div>
+            </div>
+            <div class="stat-box">
+              <div class="label">Requests</div>
+              <div class="value">1</div>
+              <div class="note">Wi-Fi issue open</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="cards-row" aria-label="Main hostel overview">
+        <article class="card card-room">
+          <div class="card-head">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 11.5L12 5l8 6.5"></path><path d="M6 10.5V19h12v-8.5"></path><path d="M9 19v-5h6v5"></path></svg>
+            </div>
+          </div>
+          <h2>My Room</h2>
+          <p>Room 302 - Single Bed</p>
+          <p class="subtle">Block B, second floor</p>
+          <button class="card-button" type="button">View Details</button>
+        </article>
+
+        <article class="card card-fees">
+          <div class="card-head">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v8"></path><path d="M9.5 10c0-1 1-2 2.5-2s2.5.8 2.5 2-1 1.7-2.5 2-2.5 1-2.5 2 1 2 2.5 2 2.5-1 2.5-2"></path></svg>
+            </div>
+          </div>
+          <h2>Hostel Fees</h2>
+          <p>Next due: $450</p>
+          <p class="subtle">Due on 15 Oct 2026</p>
+          <button class="card-button" type="button">Pay Now</button>
+        </article>
+
+        <article class="card card-requests">
+          <div class="card-head">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.5 6.5l3 3"></path><path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19Z"></path></svg>
+            </div>
+          </div>
+          <h2>Requests</h2>
+          <p>Active requests: 1</p>
+          <p class="subtle">Latest: Wi-Fi issue</p>
+          <button class="card-button" type="button">Track Status</button>
+        </article>
+
+        <article class="card card-status">
+          <div class="card-head">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 12h4l2-5 4 10 2-5h4"></path></svg>
+            </div>
+          </div>
+          <h2>Stay Status</h2>
+          <p><span class="pill pill-green">Occupied</span></p>
+          <p class="subtle">No transfer request pending right now.</p>
+          <button class="card-button" type="button">Review Profile</button>
+        </article>
+      </section>
+
+      <section class="bottom-grid">
+        <article class="panel">
+          <h2>Need attention</h2>
+          <div class="panel-copy">A short queue of actions you may want to finish today.</div>
+          <div class="action-list">
+            <div class="action-item">
+              <div class="action-icon coral">!</div>
+              <div class="action-meta">
+                <strong>Pay semester hostel fee</strong>
+                <span>$450 is still pending for the current cycle.</span>
+              </div>
+              <div class="action-status">Due</div>
+            </div>
+
+            <div class="action-item">
+              <div class="action-icon blue">i</div>
+              <div class="action-meta">
+                <strong>Track Wi-Fi complaint</strong>
+                <span>Your latest request is active and awaiting maintenance review.</span>
+              </div>
+              <div class="action-status" style="color:#628ef1;">Open</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Stay snapshot</h2>
+          <div class="panel-copy">Compact details you usually need at a glance.</div>
+          <div class="snapshot-grid">
+            <div class="snapshot-card">
+              <div class="label">Check-in</div>
+              <div class="value">12 Aug</div>
+              <div class="note">2026</div>
+            </div>
+
+            <div class="snapshot-card">
+              <div class="label">Mess Plan</div>
+              <div class="value">Standard</div>
+              <div class="note">Active meal plan</div>
+            </div>
+
+            <div class="snapshot-card">
+              <div class="label">Guest Pass</div>
+              <div class="value">1 Pending</div>
+              <div class="note">Waiting for approval</div>
+            </div>
+
+            <div class="snapshot-card">
+              <div class="label">Warden Desk</div>
+              <div class="value">Block B</div>
+              <div class="note">Ext. 214 available</div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

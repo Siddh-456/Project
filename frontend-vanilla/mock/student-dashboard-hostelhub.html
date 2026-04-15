@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelHub Student Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --page-a: #eff7ff;
+      --page-b: #f5fbff;
+      --page-c: #fff6ef;
+      --shell: rgba(255, 255, 255, 0.72);
+      --shell-strong: rgba(255, 255, 255, 0.9);
+      --line: rgba(133, 154, 191, 0.12);
+      --line-strong: rgba(133, 154, 191, 0.2);
+      --text: #243247;
+      --text-soft: #65748b;
+      --text-muted: #9aa8bc;
+      --sidebar-text: #35465e;
+      --blue: #7caef7;
+      --blue-strong: #5b8ef1;
+      --mint: #71dfc5;
+      --mint-strong: #45c7aa;
+      --amber: #f2c36d;
+      --amber-strong: #e7ac42;
+      --coral: #ff8e78;
+      --coral-strong: #ff6f5f;
+      --green: #44c57a;
+      --shadow: 0 18px 55px rgba(95, 126, 168, 0.14);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top center, rgba(135, 164, 255, 0.22), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(113, 223, 197, 0.18), transparent 32%),
+        linear-gradient(180deg, var(--page-a) 0%, var(--page-b) 52%, var(--page-c) 100%);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(150, 171, 210, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(150, 171, 210, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black 25%, transparent 75%);
+      pointer-events: none;
+    }
+
+    a,
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-frame {
+      position: relative;
+      z-index: 1;
+      width: min(1520px, calc(100vw - 52px));
+      min-height: calc(100vh - 52px);
+      margin: 26px auto;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.68));
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      padding: 22px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(242, 250, 255, 0.45));
+      border-right: 1px solid rgba(150, 171, 210, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 4px 22px;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
+    }
+
+    .brand-mark span {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 6px;
+    }
+
+    .brand-mark span:nth-child(1) {
+      top: 0;
+      left: 0;
+      background: linear-gradient(135deg, #94e7d3, #63c7af);
+    }
+
+    .brand-mark span:nth-child(2) {
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #ffd2a1, #f5af50);
+    }
+
+    .brand-mark span:nth-child(3) {
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(135deg, #a4bfff, #6f93f7);
+    }
+
+    .brand-mark span:nth-child(4) {
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(135deg, #ffb8bb, #ff7f75);
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 40px;
+      padding: 8px 10px;
+      border-radius: 15px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 8px 18px rgba(160, 184, 219, 0.16);
+    }
+
+    .nav-item.settings {
+      margin-top: 18px;
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      box-shadow: 0 10px 18px rgba(135, 164, 202, 0.18);
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: #ffffff;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-teal {
+      background: linear-gradient(135deg, #8debd5, #5ecfb2);
+    }
+
+    .icon-blue {
+      background: linear-gradient(135deg, #95bcff, #628df1);
+    }
+
+    .icon-amber {
+      background: linear-gradient(135deg, #ffd99d, #f0b34f);
+    }
+
+    .icon-coral {
+      background: linear-gradient(135deg, #ffb298, #ff7f76);
+    }
+
+    .content-shell {
+      min-width: 0;
+      padding: 14px 24px 24px 26px;
+      display: grid;
+      align-content: start;
+      gap: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      min-height: 56px;
+    }
+
+    .search {
+      position: relative;
+      width: min(420px, 42vw);
+    }
+
+    .search svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      transform: translateY(-50%);
+      stroke: #98a7bc;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .search input {
+      width: 100%;
+      height: 40px;
+      padding: 0 16px 0 40px;
+      border: 1px solid rgba(154, 176, 210, 0.16);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.66);
+      box-shadow: inset 0 1px 2px rgba(181, 197, 221, 0.16), 0 10px 18px rgba(177, 194, 218, 0.08);
+      color: var(--text);
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #a2b0c3;
+    }
+
+    .topbar-icon {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #607389;
+    }
+
+    .topbar-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #607389;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .topbar-icon::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ff6f5f;
+    }
+
+    .avatar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 4px;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background:
+        linear-gradient(135deg, #ffbe86 0%, #ff9c61 34%, #6c8efe 35%, #96c1ff 100%);
+      box-shadow: 0 8px 18px rgba(143, 166, 199, 0.16);
+    }
+
+    .avatar-caret {
+      width: 16px;
+      height: 16px;
+      stroke: #607389;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .hero-heading {
+      margin-top: 4px;
+    }
+
+    .hero-heading h1 {
+      margin: 0;
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .hero-heading .light {
+      color: #6c7a8e;
+      font-weight: 700;
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) 168px;
+      gap: 22px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .feature-card,
+    .fee-card {
+      min-width: 0;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      box-shadow: 0 18px 30px rgba(158, 185, 220, 0.15);
+    }
+
+    .feature-card {
+      padding: 14px;
+      color: #1f3143;
+      overflow: hidden;
+    }
+
+    .feature-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .feature-badge {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.46);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(8px);
+    }
+
+    .feature-badge svg {
+      width: 19px;
+      height: 19px;
+      stroke: #fff;
+      stroke-width: 2.1;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .feature-visual {
+      width: 74px;
+      height: 58px;
+      border-radius: 16px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.28)),
+        rgba(255, 255, 255, 0.26);
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      box-shadow: 0 12px 22px rgba(132, 157, 189, 0.18);
+      position: relative;
+    }
+
+    .feature-visual::before,
+    .feature-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.56);
+    }
+
+    .feature-visual::before {
+      inset: 10px auto auto 10px;
+      width: 24px;
+      height: 18px;
+    }
+
+    .feature-visual::after {
+      right: 10px;
+      bottom: 10px;
+      width: 34px;
+      height: 24px;
+    }
+
+    .feature-card h2 {
+      margin: 12px 0 4px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .feature-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(31, 49, 67, 0.88);
+    }
+
+    .feature-card .subtle {
+      color: rgba(31, 49, 67, 0.76);
+    }
+
+    .card-button {
+      width: 100%;
+      height: 38px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.36), 0 8px 16px rgba(144, 165, 192, 0.18);
+      color: #2f435a;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .card-room {
+      background: linear-gradient(145deg, #9fc4ff 0%, #7caef7 40%, #5d8fed 100%);
+    }
+
+    .card-payments {
+      background: linear-gradient(145deg, #ffd88f 0%, #f2c36d 45%, #dfaa49 100%);
+    }
+
+    .card-requests {
+      background: linear-gradient(145deg, #95efd7 0%, #71dfc5 45%, #45c7aa 100%);
+    }
+
+    .fee-card {
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.72);
+      display: grid;
+      align-content: start;
+      justify-items: center;
+    }
+
+    .fee-card-header {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .fee-card-header h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .fee-card-header p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: #6d7d92;
+    }
+
+    .donut {
+      width: 112px;
+      height: 112px;
+      margin: 10px 0 12px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        conic-gradient(#7a8ce9 0 75%, #cfe0f0 75% 100%);
+      position: relative;
+    }
+
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: inset 0 1px 2px rgba(181, 197, 220, 0.16);
+    }
+
+    .donut-copy {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .donut-copy strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .donut-copy span {
+      font-size: 14px;
+      color: #687790;
+      font-weight: 600;
+    }
+
+    .fee-breakdown {
+      width: 100%;
+      display: grid;
+      gap: 7px;
+    }
+
+    .fee-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      color: #44546b;
+    }
+
+    .fee-line span:first-child {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-paid {
+      background: #71dfc5;
+    }
+
+    .dot-pending {
+      background: #f2c36d;
+    }
+
+    .feed-section {
+      display: grid;
+      gap: 14px;
+      max-width: 760px;
+    }
+
+    .feed-section h2 {
+      margin: 0;
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      padding-left: 102px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 63px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(163, 182, 211, 0.4), rgba(163, 182, 211, 0.15));
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 76px 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+    }
+
+    .timeline-time {
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #6b7b91;
+    }
+
+    .timeline-time strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #5a6b84;
+    }
+
+    .timeline-badge {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 8px 16px rgba(149, 172, 205, 0.18);
+    }
+
+    .timeline-badge svg {
+      width: 16px;
+      height: 16px;
+      stroke: #fff;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .timeline-card {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 10px 20px rgba(160, 183, 211, 0.16);
+      font-size: 14px;
+      font-weight: 600;
+      color: #33465d;
+    }
+
+    .badge-green {
+      background: linear-gradient(135deg, #8fecc8, #54cf9e);
+    }
+
+    .badge-blue {
+      background: linear-gradient(135deg, #9dc2ff, #6f95f2);
+    }
+
+    .badge-mint {
+      background: linear-gradient(135deg, #8ce9d3, #63d0b8);
+    }
+
+    @media (max-width: 1240px) {
+      .page-frame {
+        grid-template-columns: 170px minmax(0, 1fr);
+      }
+
+      .cards-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fee-card {
+        grid-column: span 2;
+        justify-items: start;
+      }
+
+      .fee-breakdown {
+        max-width: 260px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .page-frame {
+        width: min(100vw - 24px, 100%);
+        margin: 12px auto;
+        min-height: calc(100vh - 24px);
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid rgba(150, 171, 210, 0.12);
+      }
+
+      .nav-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .nav-item.settings {
+        margin-top: 0;
+      }
+
+      .content-shell {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .search {
+        width: 100%;
+        order: 2;
+      }
+
+      .cards-row {
+        grid-template-columns: 1fr;
+      }
+
+      .fee-card {
+        grid-column: auto;
+      }
+
+      .timeline {
+        padding-left: 0;
+      }
+
+      .timeline::before {
+        left: 91px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 76px 34px minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page-frame {
+        width: calc(100vw - 12px);
+        margin: 6px auto;
+        border-radius: 22px;
+      }
+
+      .nav-list {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-heading h1,
+      .feed-section h2 {
+        font-size: 24px;
+      }
+
+      .timeline::before {
+        display: none;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-time {
+        text-align: left;
+      }
+
+      .timeline-badge {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-frame">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-name">HostelHub</div>
+      </div>
+
+      <nav class="nav-list" aria-label="Dashboard navigation">
+        <a href="#" class="nav-item active">
+          <span class="nav-icon icon-teal" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"></rect><rect x="14" y="4" width="6" height="6"></rect><rect x="4" y="14" width="6" height="6"></rect><rect x="14" y="14" width="6" height="6"></rect></svg>
+          </span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 11.5L12 5l8 6.5"></path><path d="M6 10.5V19h12v-8.5"></path><path d="M9 19v-5h6v5"></path></svg>
+          </span>
+          <span>My Room</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="2"></rect><path d="M3.5 10.5h17"></path></svg>
+          </span>
+          <span>Payments</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-coral" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 19l6-6"></path><path d="M13 7l6-6"></path><path d="M8 7l9 9"></path><path d="M7 8l-2 2"></path><path d="M17 16l2 2"></path></svg>
+          </span>
+          <span>Requests</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon icon-teal" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M16 19a4 4 0 0 0-8 0"></path><circle cx="12" cy="10" r="3"></circle><path d="M4 19a3 3 0 0 1 4-2.8"></path><path d="M20 19a3 3 0 0 0-4-2.8"></path></svg>
+          </span>
+          <span>Community</span>
+        </a>
+
+        <a href="#" class="nav-item settings">
+          <span class="nav-icon icon-coral" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-.4-1.1 1.7 1.7 0 0 0-1-.6 1.7 1.7 0 0 0-1.87.34l-.06.06A2 2 0 1 1 3.44 16.7l.06-.06A1.7 1.7 0 0 0 4 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H2.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.1-.4 1.7 1.7 0 0 0 .6-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06A2 2 0 1 1 6.44 3.4l.06.06A1.7 1.7 0 0 0 8 4a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V2.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 .4 1.1 1.7 1.7 0 0 0 1 .6 1.7 1.7 0 0 0 1.87-.34l.06-.06A2 2 0 1 1 20.56 6.3l-.06.06A1.7 1.7 0 0 0 20 8a1.7 1.7 0 0 0 .6 1 1.7 1.7 0 0 0 1.1.4h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.1.4 1.7 1.7 0 0 0-.6 1Z"></path></svg>
+          </span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content-shell">
+      <header class="topbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input type="text" placeholder="Search">
+        </div>
+
+        <button class="topbar-icon" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 6 3 8H3c0-2 3-1 3-8"></path><path d="M10 19a2 2 0 0 0 4 0"></path></svg>
+        </button>
+
+        <div class="avatar">
+          <div class="avatar-badge" aria-hidden="true"></div>
+          <svg class="avatar-caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg>
+        </div>
+      </header>
+
+      <section class="hero-heading">
+        <h1><span class="light">Good morning,</span> Alex</h1>
+      </section>
+
+      <section class="cards-row">
+        <article class="feature-card card-room">
+          <div class="feature-top">
+            <div class="feature-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 11.5L12 5l8 6.5"></path><path d="M6 10.5V19h12v-8.5"></path><path d="M9 19v-5h6v5"></path></svg>
+            </div>
+            <div class="feature-visual" aria-hidden="true"></div>
+          </div>
+          <h2>My Room</h2>
+          <p>Room 302 - Single Bed</p>
+          <p class="subtle">Status: Occupied</p>
+          <button class="card-button" type="button">View Details</button>
+        </article>
+
+        <article class="feature-card card-payments">
+          <div class="feature-top">
+            <div class="feature-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v8"></path><path d="M9.5 10c0-1 1-2 2.5-2s2.5.8 2.5 2-1 1.7-2.5 2-2.5 1-2.5 2 1 2 2.5 2 2.5-1 2.5-2"></path></svg>
+            </div>
+            <div style="width:74px;height:58px;"></div>
+          </div>
+          <h2>Payments</h2>
+          <p>Next Due: $450</p>
+          <p class="subtle">Due Date: Oct 15, 2026</p>
+          <button class="card-button" type="button">Pay Now</button>
+        </article>
+
+        <article class="feature-card card-requests">
+          <div class="feature-top">
+            <div class="feature-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.5 6.5l3 3"></path><path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19Z"></path></svg>
+            </div>
+            <div style="width:74px;height:58px;"></div>
+          </div>
+          <h2>Requests</h2>
+          <p>Active Requests: 1</p>
+          <p class="subtle">Latest: Wi-Fi Issue</p>
+          <button class="card-button" type="button">Track Status</button>
+        </article>
+
+        <article class="fee-card">
+          <div class="fee-card-header">
+            <h2>Fee Status</h2>
+            <p>Progress for semester</p>
+          </div>
+
+          <div class="donut">
+            <div class="donut-copy">
+              <strong>75%</strong>
+              <span>Paid</span>
+            </div>
+          </div>
+
+          <div class="fee-breakdown">
+            <div class="fee-line">
+              <span><i class="dot dot-paid"></i>Paid:</span>
+              <strong>$1350</strong>
+            </div>
+            <div class="fee-line">
+              <span><i class="dot dot-pending"></i>Pending:</span>
+              <strong>$450</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="feed-section">
+        <h2>Activity Feed</h2>
+
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="timeline-time">
+              <strong>Today</strong>
+              9:00 AM
+            </div>
+            <div class="timeline-badge badge-green" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div class="timeline-card">Room Inspection Scheduled</div>
+          </article>
+
+          <article class="timeline-item">
+            <div class="timeline-time">
+              <strong>Yesterday</strong>
+              4:30 PM
+            </div>
+            <div class="timeline-badge badge-blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M21 8.5l-9 4.5-9-4.5"></path><path d="M3 8.5l9-5 9 5v7l-9 5-9-5v-7Z"></path></svg>
+            </div>
+            <div class="timeline-card">Package Delivered</div>
+          </article>
+
+          <article class="timeline-item">
+            <div class="timeline-time">
+              <strong>Oct 10</strong>
+              11:15 AM
+            </div>
+            <div class="timeline-badge badge-mint" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 19l6-6"></path><path d="M13 7l6-6"></path><path d="M8 7l9 9"></path><path d="M7 8l-2 2"></path><path d="M17 16l2 2"></path></svg>
+            </div>
+            <div class="timeline-card">Maintenance Request Submitted</div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
